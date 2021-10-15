@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "Vertice.hpp"
+#include "../external_dependencys/lista_encadeada.cpp"
 
 class Grafo {
     private:
@@ -12,8 +13,8 @@ class Grafo {
 
     public:
         unsigned int id;
-        std::vector<Vertice*> vertice;
-        std::vector<Aresta*> aresta;
+        std::list<Vertice*> vertice;
+        std::list<Aresta*> aresta;
 
         // construtor 
         Grafo();
@@ -34,7 +35,7 @@ class Grafo {
         // retorna se existir um vertice por id
         Vertice * getVertice(unsigned int id);
         // retorna se existir uma aresta por id
-        Aresta * getAresta(unsigned int id);
+        Aresta* getAresta(unsigned int id_v1, unsigned int id_v2);
 
         // retorna a representacao do grafo em uma string
         std::string toSting();

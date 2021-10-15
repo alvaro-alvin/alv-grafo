@@ -9,7 +9,7 @@ Grafo::~Grafo(){
 }
 
 bool Grafo::addVertice(){
-    //estancia nova vertice com id paadrão sendo a ordem + 1
+    //estancia nova vertice com id padrão sendo a ordem + 1
     Vertice * v = new Vertice(ordem + 1);
     if(v == nullptr){
         std::cerr << "Erro ao alocar vertice!" << std::endl;
@@ -35,12 +35,13 @@ bool Grafo::addAresta(unsigned int v1, unsigned int v2){
                     // seu id padrao é o tamanho + 1
                     a->id = tamanho + 1;
                     // a primeira vertice guarda a aresta adjacente
-                    vertice[i]->aresta.push_back(a);
+                    vertice[i]->aresta.adiciona_final(a);
                     // se nao for um laço o outro vertice guarda também
                     if(i != j){
-                        vertice[j]->aresta.push_back(a);
+                        vertice[j]->aresta.adiciona_final(a);
                     }
                     // finalemnte a aresta é adicionada ao grafo
+                    //TODO: tryng to remove edges from gafo
                     aresta.push_back(a);
                     tamanho++;
                     break;
@@ -59,26 +60,67 @@ bool Grafo::addAresta(unsigned int v1, unsigned int v2){
 }
 
 std::string Grafo::toSting(){
+    
+    std::cout << "Tentando remover vertice " << id << std::endl;
+    bool success = false;
+    std::list<Vertice*>::iterator it = vertice.begin();
+    while (it != vertice.end()){
+        if ((*it)->id == id){
+            std::ostringstream resultado;
+        for(int i = 0; i < vertice.size(); i++){
+            resultado << "V:" << (*it)->id << " - ";
+            for(auto const &i: (*it)->aresta){
+                resultado << i->toString() << std::endl;
+            }
+            resultado << std::endl;
+            }
+            return resultado.str();
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    /* ANTIGO TO_STRING
     std::ostringstream resultado;
     for(int i = 0; i < vertice.size(); i++){
         resultado << "V:" << vertice[i]->id << " - ";
-            for(int j = 0; j< vertice[i]->aresta.size(); j++){
-                resultado << vertice[i]->aresta[j]->toString();
-            }
+        
+            resultado << vertice[i]->aresta.to_string();
+            
         resultado << std::endl;
     }
     return resultado.str();
+    */
 }
 
+//ATUALEMNTE NAO FUNCIONA, VOLTAR AQUI DEPOIS
 bool Grafo::rmVertice(unsigned int id){
+    //UTILIZANDO LISTA (NOVO)
     std::cout << "Tentando remover vertice " << id << std::endl;
+    bool success = false;
+    std::list<Vertice*>::iterator it = vertice.begin();
+    while (it != vertice.end()){
+        if ((*it)->id == id){
+            std::list<Aresta*>::iterator it2 = (*it)->aresta.begin();
+            //TODO TODO: aqui vou utilizar a funcao remove aresat para todas as arestas do vertice que sera removido
+            vertice.erase(it++); //need to be that way
+            success = true;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    //UTILIZANDO VECTORS (VELHO)
     for(int i = 0; i < vertice.size(); i++){
         if(vertice[i]->id == id){
             Vertice* v = vertice[i];
             // remove todas as arestas conectadas
-            int tamanho = v->aresta.size();
+            int tamanho = v->aresta.tam;
             for(int j = 0; j < tamanho; j++){
-                rmAresta(v->aresta[0]->id);
+                //TODO: é preciso criar amneira de acessar os dados da lista 
+                rmAresta(v->aresta[j]->id);
             }
             // remove o vertice 
             free(v);
@@ -90,9 +132,25 @@ bool Grafo::rmVertice(unsigned int id){
     std::cerr << "Nao foi possivel remover o vertice: nao existe!" << std::endl;
     return false;
 }
-
+//ATUALEMNTE NAO FUNCIONA, VOLTAR AQUI DEPOIS
 bool Grafo::rmAresta(unsigned int id){
+
+    //TODO: deve ser reimplementado para econtrar em cada vertice
     std::cout << "Tentando remover aresta " << id << std::endl;
+    std::list<Aresta*>::iterator it = aresta.begin();
+    while (it != vertice.end()){
+        if ((*it)->id == id){
+            std::list<Aresta*>::iterator it2 = (*it)->aresta.begin();
+            //TODO TODO: aqui vou utilizar a funcao remove aresat para todas as arestas do vertice que sera removido
+            vertice.erase(it++); //need to be that way
+            success = true;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
     // encontra a aresta
     for(int i = 0 ; i < aresta.size(); i++){
         if(aresta[i]->id == id){
@@ -111,6 +169,10 @@ bool Grafo::rmAresta(unsigned int id){
                 }
             }
             // é apagada 
+            /*
+                TODO: isso vai ter que ser feito de outra maneira, apagar
+                em ambos os vertices somente (como a cima)?
+            */
             free(aresta[i]);
             aresta.erase(aresta.begin() + i);
             return true;
@@ -132,7 +194,8 @@ Vertice* Grafo::getVertice(unsigned int id){
     return nullptr;
 }
 
-Aresta* Grafo::getAresta(unsigned int id){
+Aresta* Grafo::getAresta(unsigned int id_v1, unsigned int id_v2){
+    //TODO: reimplementar par buscar as arestas somente nos vertices
     for(int i = 0; i < aresta.size(); i++){
         if(aresta[i]-> id == id){
             return aresta[i];

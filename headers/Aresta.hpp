@@ -5,6 +5,7 @@
 #include "Vertice.hpp"
 #include <string>
 #include <sstream>
+#include "../external_dependencys/lista_encadeada.cpp"
 
 class Vertice;
 

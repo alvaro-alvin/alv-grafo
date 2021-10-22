@@ -15,7 +15,7 @@ LIBS =
 
 
 
-OBJS = $(builddir)/aresta.o $(builddir)/vertice.o $(builddir)/grafo.o $(builddir)/lista.o  
+OBJS = $(builddir)/aresta.o $(builddir)/vertice.o $(builddir)/grafo.o   
 
 .PHONY: doc clean all test 
 
@@ -24,8 +24,8 @@ all: main
 main: $(OBJS) $(srcdir)/main.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) $(srcdir)/main.cpp $(LIBS) -o $(bindir)/grafo_teste
 
-$(builddir)/lista.o: $(externaldir)/lista_encadeada.cpp
-	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(externaldir)/lista_encadeada.cpp -o $@
+#$(builddir)/lista.o: $(externaldir)/lista_encadeada.cpp
+#	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(externaldir)/lista_encadeada.cpp -o $@
 
 $(builddir)/aresta.o: $(builddir)/vertice.o $(includedir)/Aresta.hpp $(srcdir)/aresta.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/aresta.cpp -o $@

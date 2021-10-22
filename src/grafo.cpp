@@ -8,7 +8,7 @@ Grafo::~Grafo(){
 
 }
 
-bool Grafo::addVertice(){
+bool Grafo::addVertice(){ // -------------------------------------- OK
     //estancia nova vertice com id padrão sendo a ordem + 1
     Vertice * v = new Vertice(ordem + 1);
     if(v == nullptr){
@@ -20,81 +20,78 @@ bool Grafo::addVertice(){
     return true;
 }
 
-bool Grafo::addAresta(unsigned int v1, unsigned int v2){
+bool Grafo::addAresta(unsigned int v1, unsigned int v2){ //--------------------- OK
+    //valida a existencia dos vertices requeridos pela nova aresta 
+    bool existe_v1 = false;
+    bool existe_v2 = false;
     bool existe = false;
-    //percorre os vertices para saber se são válidos 
-    for(int i = 0; i < vertice.size(); i++){
-        if(vertice[i]->id == v1){
-            //se primeiro for percorre de novo para encontrar o segundo
-            //(possivelamente da para fazer tudo na primeira passagem)
-            for(int j = 0; j < vertice.size(); j++){
-                if(vertice[j]->id == v2){
-                    existe = true;
-                    // apos validar os vertices a nova aresta é criada
-                    Aresta * a = new Aresta(vertice[i], vertice[j]);
-                    // seu id padrao é o tamanho + 1
-                    a->id = tamanho + 1;
-                    // a primeira vertice guarda a aresta adjacente
-                    vertice[i]->aresta.adiciona_final(a);
-                    // se nao for um laço o outro vertice guarda também
-                    if(i != j){
-                        vertice[j]->aresta.adiciona_final(a);
-                    }
-                    // finalemnte a aresta é adicionada ao grafo
-                    //TODO: tryng to remove edges from gafo
-                    aresta.push_back(a);
-                    tamanho++;
-                    break;
-                }
-            }
-        }
-    }
-    if(!existe){
-        std::cout << "Um ou ambos os vertices não existem" << std::endl;
-        return false;
-    }
-    else{
-        return true;
-    }
-    
-}
-
-std::string Grafo::toSting(){
-    
-    std::cout << "Tentando remover vertice " << id << std::endl;
-    bool success = false;
     std::list<Vertice*>::iterator it = vertice.begin();
     while (it != vertice.end()){
-        if ((*it)->id == id){
-            std::ostringstream resultado;
-        for(int i = 0; i < vertice.size(); i++){
-            resultado << "V:" << (*it)->id << " - ";
-            for(auto const &i: (*it)->aresta){
-                resultado << i->toString() << std::endl;
-            }
-            resultado << std::endl;
-            }
-            return resultado.str();
+        if ((*it)->id == v1 && existe_v1 == false){
+            existe_v1 = true;
+            ++it;
+        }
+        else if((*it)->id == v2 && existe_v2 == false){
+            existe_v2 = true;
+            ++it;
         }
         else
         {
             ++it;
         }
     }
-    /* ANTIGO TO_STRING
-    std::ostringstream resultado;
-    for(int i = 0; i < vertice.size(); i++){
-        resultado << "V:" << vertice[i]->id << " - ";
-        
-            resultado << vertice[i]->aresta.to_string();
-            
-        resultado << std::endl;
+    existe = existe_v1 && existe_v2;
+
+    if(existe){
+        // apos validar os vertices a nova aresta é criada
+        Aresta * a = new Aresta(v1, v2);
+        // seu id padrao é o tamanho + 1
+        a->id = tamanho + 1;
+        // percorre os vertices e adiciona as aresta a ambos
+        it = vertice.begin();
+        while (it != vertice.end()){
+            if ((*it)->id == v1){
+                (*it)->aresta.push_back(a);
+                ++it;
+            }
+            else if((*it)->id == v2){
+                (*it)->aresta.push_back(a);
+                ++it;
+            }
+            else
+            {
+                ++it;
+            }
+        }
+        tamanho++;
+        return true;
     }
+    else{
+        std::cout << "Um ou ambos os vertices não existem" << std::endl;
+        return false;
+    }
+
+}
+
+std::string Grafo::toSting(){ // ----------------------------------------- OK
+    std::ostringstream resultado;
+    //percorre os vertices
+    std::list<Vertice*>::iterator it = vertice.begin();
+    while (it != vertice.end()){
+            
+        resultado << "V:" << (*it)->id << " - ";
+        for(auto const &i: (*it)->aresta){
+            resultado << i->toString();
+        }
+        resultado << std::endl;
+        ++it;
+    }   
     return resultado.str();
-    */
+
 }
 
 //ATUALEMNTE NAO FUNCIONA, VOLTAR AQUI DEPOIS
+/*
 bool Grafo::rmVertice(unsigned int id){
     //UTILIZANDO LISTA (NOVO)
     std::cout << "Tentando remover vertice " << id << std::endl;
@@ -169,10 +166,10 @@ bool Grafo::rmAresta(unsigned int id){
                 }
             }
             // é apagada 
-            /*
-                TODO: isso vai ter que ser feito de outra maneira, apagar
-                em ambos os vertices somente (como a cima)?
-            */
+            
+            //    TODO: isso vai ter que ser feito de outra maneira, apagar
+            //    em ambos os vertices somente (como a cima)?
+            
             free(aresta[i]);
             aresta.erase(aresta.begin() + i);
             return true;
@@ -182,25 +179,117 @@ bool Grafo::rmAresta(unsigned int id){
     std::cerr << "Nao foi possivel remover a aresta: nao existe!" << std::endl;
     return false;
 }
+*/
 
+// ----------------------------------------------------- TODO:
 
 Vertice* Grafo::getVertice(unsigned int id){
-    for(int i = 0; i < vertice.size(); i++){
-        if(vertice[i]-> id == id){
-            return vertice[i];
+    std::list<Vertice*>::iterator it = vertice.begin();
+    while (it != vertice.end()){
+        if ((*it)->id == id){
+            return *it;
+        }
+        else
+        {
+            ++it;
         }
     }
-    std::cerr << "Vertice nao existe:" << id << std::endl;
+    std::cerr << "[ERRO] - Vertice solicitado não existe" << std::endl;
     return nullptr;
 }
 
+// ------------------------------------------------------- TODO:
+
 Aresta* Grafo::getAresta(unsigned int id_v1, unsigned int id_v2){
-    //TODO: reimplementar par buscar as arestas somente nos vertices
-    for(int i = 0; i < aresta.size(); i++){
-        if(aresta[i]-> id == id){
-            return aresta[i];
+    Vertice* v = getVertice(id_v1);
+    std::list<Aresta*>::iterator it = v->aresta.begin();
+    while (it != v->aresta.end()){
+        if ((*it)->vertice[0] == id_v2 || (*it)->vertice[1] == id_v2){
+            return *it;
+        }
+        else
+        {
+            ++it;
         }
     }
-    std::cerr << "Aresta nao existe:" << id << std::endl;
+    std::cerr << "[ERRO] - Aresta solicitada não existe" << std::endl;
     return nullptr;
+}
+
+unsigned int Grafo::getOrdem(){
+    return ordem;
+}
+unsigned int Grafo::getTamanho(){
+    return tamanho;
+}
+
+std::list<Vertice*> Grafo::vertices(){
+    return vertice;
+}
+std::list<Aresta*> Grafo::arestas(){
+    std::list<Aresta*> lista_final;
+    std::vector<unsigned int> ids;     
+    std::list<Vertice*>::iterator it = vertice.begin();
+    // percorre a lista de vertices
+    while (it != vertice.end()){
+        if (!(*it)->aresta.empty()){
+            std::list<Aresta*>::iterator ita = (*it)->aresta.begin();
+            //percorre as arestas de cada vertice
+            while (it != vertice.end()){
+                // se o id ainda não foi listado adiciona o id a lista de ids e a aresta a lista de arestas
+                if(!(std::find(ids.begin(), ids.end(), (*ita)->id) != ids.end())){
+                    ids.push_back((*ita)->id);
+                    lista_final.push_back(*ita);
+                }
+                ++ita;
+            }
+            ++it;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    return lista_final;
+}
+
+std::list<Vertice*> Grafo::adj(Vertice* v){
+    std::list<Vertice*> lista_final;
+    std::list<Aresta*>::iterator it = v->aresta.begin();
+    while (it != v->aresta.end()){
+        if((*it)->vertice[0] != v->id){
+            lista_final.push_back(getVertice((*it)->vertice[0]));
+            ++it;
+        }
+        else{
+            lista_final.push_back(getVertice((*it)->vertice[1]));
+            ++it;
+        }
+    }
+    return lista_final;
+}
+
+unsigned int Grafo::grau(Vertice* v){
+    return v->aresta.size();
+}
+
+std::list<Aresta*> Grafo::arestas(Vertice * v){
+    return v->aresta;
+}
+
+Vertice* Grafo::oposto(Vertice* v, Aresta* a){
+    if(a->vertice[0] == v->id){
+        return getVertice(a->vertice[1]);
+    }
+    else if(a->vertice[1] == v->id){
+        return getVertice(a->vertice[0]);
+    }
+    else{
+        std::cerr << "[ERRO] - Aresta solicidatada não incide no vertice selecionado" << std::endl;
+        return nullptr;
+    }
+}
+
+unsigned int* Grafo::verticesA(Aresta * a){
+    return a->vertice;
 }

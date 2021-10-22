@@ -3,9 +3,10 @@
 
 #include <vector>
 #include "Vertice.hpp"
+#include <list>
 #include <string>
 #include <sstream>
-#include "../external_dependencys/lista_encadeada.cpp"
+//#include "../external_dependencys/lista_encadeada.cpp"
 
 class Vertice;
 
@@ -13,9 +14,9 @@ class Aresta {
 
     public:
         unsigned int id;
-        Vertice* vertice[2];
+        unsigned int vertice[2];
         // referencia para os dois vertices conectados pela aresta
-        Aresta(Vertice * v1, Vertice * v2);
+        Aresta(unsigned int v1, unsigned int v2);
         //retorna uma representacao da aresta em string
         std::string toString();
 

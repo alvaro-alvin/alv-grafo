@@ -2,19 +2,20 @@
 # @a: the filename of the target of the rule
 
 prefix = .
+externaldir = $(prefix)/external_dependencys
 bindir = $(prefix)/bin
 builddir = $(prefix)/build
 includedir = $(prefix)/headers
 srcdir = $(prefix)/src
 docdir = $(prefix)/doc
 
-CXXFLAGS = -g -std=c++20 -pthread
+CXXFLAGS = -g -std=c++17 -pthread
 INCLUDES = -I$(includedir) 
 LIBS = 
 
 
 
-OBJS = $(builddir)/aresta.o $(builddir)/vertice.o $(builddir)/grafo.o  
+OBJS = $(builddir)/aresta.o $(builddir)/vertice.o $(builddir)/grafo.o   
 
 .PHONY: doc clean all test 
 
@@ -22,6 +23,9 @@ all: main
 
 main: $(OBJS) $(srcdir)/main.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) $(srcdir)/main.cpp $(LIBS) -o $(bindir)/grafo_teste
+
+#$(builddir)/lista.o: $(externaldir)/lista_encadeada.cpp
+#	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(externaldir)/lista_encadeada.cpp -o $@
 
 $(builddir)/aresta.o: $(builddir)/vertice.o $(includedir)/Aresta.hpp $(srcdir)/aresta.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/aresta.cpp -o $@

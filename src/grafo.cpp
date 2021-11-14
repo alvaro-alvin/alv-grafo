@@ -334,3 +334,55 @@ Vertice* Grafo::oposto(Vertice* v, Aresta* a){
 unsigned int* Grafo::verticesA(Aresta * a){
     return a->vertice;
 }
+
+tree<unsigned int> Grafo::DFS(){
+    //see : https://github.com/kpeeters/tree.hh/blob/master/src/tree_example.cc
+    tree<unsigned int> av;
+    tree<unsigned int>::iterator root, atual;
+    unsigned int tempo = 0;
+    root = av.begin();
+    std::list<Vertice*>::iterator it = vertice.begin();
+    // percorre a lista de vertices e as defini como brancas
+    while (it != vertice.end()){
+        (*it)->status = 0;
+        ++it;
+    }
+    // percorre novamente aplicando o DFS_VISIT
+    it = vertice.begin();
+    while (it != vertice.end()){
+        if((*it)->status == 0){
+            std::cout << "A" << std::endl;
+            atual = av.insert(root, (*it)->id);
+            DFS_VISIT(av, tempo, *(*it), atual);
+        }
+        ++it;
+    }
+    return av;
+}
+
+void Grafo::DFS_VISIT(tree<unsigned int> &t, unsigned int &tempo, Vertice &v, tree<unsigned int>::iterator pai){
+    std::cout << "abriu" << v.id<< std::endl;
+    tree<unsigned int>::iterator atual;
+    v.status = 1;
+    tempo++;
+    v.aberto = tempo;
+
+    std::list<Vertice*> adj_v = adj(&v);
+    std::list<Vertice*>::iterator it = adj_v.begin();
+
+    // percorre os vertices adjacentes
+    while(it != adj_v.end()){
+        std::cout << "Status de " << (*it)->id << "=" << (*it)->status << std::endl;
+        if((*it)->status == 0){
+            std::cout << "A" << std::endl;
+            atual=t.append_child(pai, (*it)->id);
+            DFS_VISIT(t, tempo, *(*it), atual);
+        }
+        ++it;
+    }
+    std::cout << "fechou" << v.id << std::endl;
+    // fecha o vertice
+    v.status = 2;
+    tempo++;
+    v.fechado = tempo;
+}

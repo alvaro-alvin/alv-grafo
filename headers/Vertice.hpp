@@ -6,7 +6,6 @@
 #include "Aresta.hpp"
 #include <string>
 #include <sstream>
-//#include "../external_dependencys/lista_encadeada.cpp"
 
 class Aresta;
 
@@ -16,6 +15,13 @@ class Vertice {
         unsigned int id;
         // vetor com referencia para todas as atestas adjacentes ao vertice
         std::list<Aresta*> aresta;
+
+        // status: 0 = branco, 1 = cinza, 2 = preto
+        short int status = 0;
+        // tempo em que foi aberto
+        int aberto;
+        // tempo em que foi fechado
+        int fechado;
 
         Vertice(unsigned int id);
 

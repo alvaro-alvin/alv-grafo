@@ -6,7 +6,8 @@
 #include <iostream>
 #include <list>
 #include "Vertice.hpp"
-//#include "../external_dependencys/lista_encadeada.cpp"
+#include "tree.hh"
+#include "tree_util.hh"
 
 class Grafo {
     private:
@@ -14,11 +15,13 @@ class Grafo {
         unsigned int tamanho = 0;
         std::list<Vertice*> vertice;
 
+        //called in DFS
+        void DFS_VISIT(tree<unsigned int> &t, unsigned int &tempo, Vertice &v, tree<unsigned int>::iterator pai);
+
     public:
         unsigned int id;
         
         
-        //std::list<Aresta*> aresta;
 
         // construtor 
         Grafo();
@@ -34,7 +37,7 @@ class Grafo {
         // remove uam aresta por id
         //bool rmAresta(unsigned int id);
         // remove uma aresta por vertices conectados 
-        //TODO: bool rmAresta(unsigned int v1, unsigned int v2);
+        //bool rmAresta(unsigned int v1, unsigned int v2);
 
         // retorna se existir um vertice por id
         Vertice * getVertice(unsigned int id);
@@ -61,6 +64,9 @@ class Grafo {
 
         // retorna a representacao do grafo em uma string
         std::string toSting();
+
+        // busca em profundidade - FUNCIONANDO SOMENTE PARA GRAFOS CONEXOS
+        tree<unsigned int> DFS();
 };
 
 

@@ -19,6 +19,9 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
     g.addAresta(1,2);
     g.addAresta(1,3);
     g.addAresta(2,4);
+    g.addAresta(1,5);
+    g.addAresta(3,6);
+    g.addAresta(2,6);
 
     std::cout << "Arestas adicionadas com sucesso" << std::endl << std::endl;
 
@@ -36,6 +39,14 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
       g.oposto(g.getVertice(1), g.getAresta(2))->id << std::endl;
 
     std::cout << "Grau do vertice 1: " << g.grau(g.getVertice(1)) << std::endl;
+
+    std::cout << "Executando busca em profundiade:" << std::endl;
+
+    tree<unsigned int> arvore = g.DFS();
+
+    std::cout << "Arvore de resultados:" << std::endl;
+
+    kptree::print_tree_bracketed(arvore);
 
 
 

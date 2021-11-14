@@ -2,7 +2,6 @@
 # @a: the filename of the target of the rule
 
 prefix = .
-externaldir = $(prefix)/external_dependencys
 bindir = $(prefix)/bin
 builddir = $(prefix)/build
 includedir = $(prefix)/headers
@@ -24,8 +23,6 @@ all: main
 main: $(OBJS) $(srcdir)/main.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) $(srcdir)/main.cpp $(LIBS) -o $(bindir)/grafo_teste
 
-#$(builddir)/lista.o: $(externaldir)/lista_encadeada.cpp
-#	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(externaldir)/lista_encadeada.cpp -o $@
 
 $(builddir)/aresta.o: $(builddir)/vertice.o $(includedir)/Aresta.hpp $(srcdir)/aresta.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/aresta.cpp -o $@
@@ -33,7 +30,7 @@ $(builddir)/aresta.o: $(builddir)/vertice.o $(includedir)/Aresta.hpp $(srcdir)/a
 $(builddir)/vertice.o: $(includedir)/Vertice.hpp $(srcdir)/vertice.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/vertice.cpp -o $@
 
-$(builddir)/grafo.o: $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Grafo.hpp $(srcdir)/grafo.cpp 
+$(builddir)/grafo.o: $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Grafo.hpp $(includedir)/tree.hh $(includedir)/tree_util.hh
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/grafo.cpp -o $@
 
 # creating directories

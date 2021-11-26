@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <list>
+#include <map>
 #include "Vertice.hpp"
 #include "tree.hh"
 #include "tree_util.hh"
@@ -16,7 +17,7 @@ class Grafo {
         std::list<Vertice*> vertice;
 
         //called in DFS
-        void DFS_VISIT(tree<unsigned int> &t, unsigned int &tempo, Vertice &v, tree<unsigned int>::iterator pai);
+        void DFS_VISIT(std::list<std::pair<unsigned int, unsigned int>> &v_r, unsigned int &tempo, Vertice &v);
 
     public:
         unsigned int id;
@@ -66,7 +67,7 @@ class Grafo {
         std::string toSting();
 
         // busca em profundidade - FUNCIONANDO SOMENTE PARA GRAFOS CONEXOS
-        tree<unsigned int> DFS();
+        std::vector<std::list<std::pair<unsigned int, unsigned int>>> DFS();
 };
 
 

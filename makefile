@@ -20,7 +20,7 @@ OBJS = $(builddir)/aresta.o $(builddir)/vertice.o $(builddir)/grafo.o
 
 all: main
 
-main: $(OBJS) $(srcdir)/main.cpp
+main: $(OBJS) $(srcdir)/main.cpp $(builddir)/grafo.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) $(srcdir)/main.cpp $(LIBS) -o $(bindir)/grafo_teste
 
 
@@ -30,7 +30,7 @@ $(builddir)/aresta.o: $(builddir)/vertice.o $(includedir)/Aresta.hpp $(srcdir)/a
 $(builddir)/vertice.o: $(includedir)/Vertice.hpp $(srcdir)/vertice.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/vertice.cpp -o $@
 
-$(builddir)/grafo.o: $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Grafo.hpp $(includedir)/tree.hh $(includedir)/tree_util.hh
+$(builddir)/grafo.o: $(srcdir)/grafo.cpp $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Grafo.hpp $(includedir)/tree.hh $(includedir)/tree_util.hh
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/grafo.cpp -o $@
 
 # creating directories

@@ -335,12 +335,10 @@ unsigned int* Grafo::verticesA(Aresta * a){
     return a->vertice;
 }
 
-tree<unsigned int> Grafo::DFS(){
+std::vector<std::list<std::pair<unsigned int, unsigned int>>> Grafo::DFS(){
     //see : https://github.com/kpeeters/tree.hh/blob/master/src/tree_example.cc
-    tree<unsigned int> av;
-    tree<unsigned int>::iterator root, atual;
+    std::vector<std::list<std::pair<unsigned int, unsigned int>>> v_r_total;
     unsigned int tempo = 0;
-    root = av.begin();
     std::list<Vertice*>::iterator it = vertice.begin();
     // percorre a lista de vertices e as defini como brancas
     while (it != vertice.end()){
@@ -351,18 +349,17 @@ tree<unsigned int> Grafo::DFS(){
     it = vertice.begin();
     while (it != vertice.end()){
         if((*it)->status == 0){
-            std::cout << "A" << std::endl;
-            atual = av.insert(root, (*it)->id);
-            DFS_VISIT(av, tempo, *(*it), atual);
+            std::list<std::pair<unsigned int, unsigned int>> v_r;
+            DFS_VISIT(v_r, tempo, *(*it));
+            v_r_total.push_back(v_r);
         }
         ++it;
     }
-    return av;
+    return v_r_total;
 }
 
-void Grafo::DFS_VISIT(tree<unsigned int> &t, unsigned int &tempo, Vertice &v, tree<unsigned int>::iterator pai){
-    std::cout << "abriu" << v.id<< std::endl;
-    tree<unsigned int>::iterator atual;
+void Grafo::DFS_VISIT(std::list<std::pair<unsigned int, unsigned int>> &v_r, unsigned int &tempo, Vertice &v){
+    //std::cout << "abriu: " << v.id<< std::endl;
     v.status = 1;
     tempo++;
     v.aberto = tempo;
@@ -372,15 +369,18 @@ void Grafo::DFS_VISIT(tree<unsigned int> &t, unsigned int &tempo, Vertice &v, tr
 
     // percorre os vertices adjacentes
     while(it != adj_v.end()){
-        std::cout << "Status de " << (*it)->id << "=" << (*it)->status << std::endl;
+        //std::cout << "Status de " << (*it)->id << "=" << (*it)->status << std::endl ;
         if((*it)->status == 0){
-            std::cout << "A" << std::endl;
-            atual=t.append_child(pai, (*it)->id);
-            DFS_VISIT(t, tempo, *(*it), atual);
+            //std::cout << "A" << std::endl;
+            std::pair<unsigned int, unsigned int> pai_filho;
+            pai_filho.first = v.id;
+            pai_filho.second = ((*it)->id);
+            v_r.push_back(pai_filho);
+            DFS_VISIT(v_r, tempo, *(*it));
         }
         ++it;
     }
-    std::cout << "fechou" << v.id << std::endl;
+    //std::cout << "fechou: " << v.id << std::endl;
     // fecha o vertice
     v.status = 2;
     tempo++;

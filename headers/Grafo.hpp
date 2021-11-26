@@ -7,8 +7,6 @@
 #include <list>
 #include <map>
 #include "Vertice.hpp"
-#include "tree.hh"
-#include "tree_util.hh"
 
 class Grafo {
     private:
@@ -33,6 +31,7 @@ class Grafo {
         bool addVertice();
         // adiciona aresta que conecta dois vertices
         bool addAresta(unsigned int v1, unsigned int v2);
+        bool addAresta(unsigned int v1, unsigned int v2, int custo);
         // remove um vertice por id
         //bool rmVertice(unsigned int id);
         // remove uam aresta por id
@@ -69,7 +68,7 @@ class Grafo {
         // busca em profundidade 
         std::vector<std::list<std::pair<unsigned int, unsigned int>>> DFS();
 
-        void getMatrixAdj();
+        int** Floyd();
 };
 
 

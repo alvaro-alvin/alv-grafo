@@ -74,6 +74,60 @@ bool Grafo::addAresta(unsigned int v1, unsigned int v2){ //---------------------
 
 }
 
+bool Grafo::addAresta(unsigned int v1, unsigned int v2, int custo){ //--------------------- OK
+    // valida a existencia dos vertices requeridos pela nova aresta 
+    bool existe_v1 = false;
+    bool existe_v2 = false;
+    bool existe = false;
+    std::list<Vertice*>::iterator it = vertice.begin();
+    // percorre os vertices para validar a existencia 
+    while (it != vertice.end()){
+        if ((*it)->id == v1 && existe_v1 == false){
+            existe_v1 = true;
+            ++it;
+        }
+        else if((*it)->id == v2 && existe_v2 == false){
+            existe_v2 = true;
+            ++it;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    existe = existe_v1 && existe_v2;
+
+    if(existe){
+        // apos validar os vertices a nova aresta é criada
+        Aresta * a = new Aresta(v1, v2, custo);
+        // seu id padrao é o tamanho + 1
+        a->id = tamanho + 1;
+        // percorre os vertices e adiciona as aresta a ambos
+        it = vertice.begin();
+        while (it != vertice.end()){
+            if ((*it)->id == v1){
+                (*it)->aresta.push_back(a);
+                ++it;
+            }
+            else if((*it)->id == v2){
+                (*it)->aresta.push_back(a);
+                ++it;
+            }
+            else
+            {
+                ++it;
+            }
+        }
+        tamanho++;
+        return true;
+    }
+    else{
+        std::cout << "Um ou ambos os vertices não existem" << std::endl;
+        return false;
+    }
+
+}
+
 std::string Grafo::toSting(){ // ----------------------------------------- OK
     std::ostringstream resultado;
     //percorre os vertices
@@ -220,7 +274,7 @@ Aresta* Grafo::getAresta(unsigned int id_v1, unsigned int id_v2){
             ++it;
         }
     }
-    std::cout << "Aresta solicitada nao existe, retornando nulo" << std::endl;
+    //std::cout << "Aresta solicitada nao existe, retornando nulo" << std::endl;
     return nullptr;
 }
 
@@ -336,7 +390,6 @@ unsigned int* Grafo::verticesA(Aresta * a){
 }
 
 std::vector<std::list<std::pair<unsigned int, unsigned int>>> Grafo::DFS(){
-    //see : https://github.com/kpeeters/tree.hh/blob/master/src/tree_example.cc
     std::vector<std::list<std::pair<unsigned int, unsigned int>>> v_r_total;
     unsigned int tempo = 0;
     std::list<Vertice*>::iterator it = vertice.begin();
@@ -387,12 +440,19 @@ void Grafo::DFS_VISIT(std::list<std::pair<unsigned int, unsigned int>> &v_r, uns
     v.fechado = tempo;
 }
 
-void Grafo::getMatrixAdj(){
+int** Grafo::Floyd(){
     //gerar matriz de adjacencia
     std::list<Vertice*>::iterator it_i;
     std::list<Vertice*>::iterator it_j;
     it_i = vertice.begin();
-    int m_adj[ordem][ordem];
+    // inicializa matriz de adjacencia
+    int **m_adj;
+    m_adj = (int**) malloc (ordem * sizeof (int *));
+    for (int i=0; i<ordem; i++){
+        m_adj[i] = (int*) malloc(ordem * sizeof(int));
+    }
+
+    // gera matriz de adjacencia
     for(int i = 0; i<ordem; i++){
         it_j = vertice.begin();
         for(int j = 0; j<ordem; j++){
@@ -418,7 +478,8 @@ void Grafo::getMatrixAdj(){
         }
         it_i++;
     }
-
+    //printa matriz de adjacencia
+    std::cout << "Matriz de adjacencia:" << std:: endl;
     for(int i = 0; i<ordem; i++){
         std::cout << "|";
         for(int j = 0; j<ordem; j++){
@@ -431,9 +492,18 @@ void Grafo::getMatrixAdj(){
     }
 
     std::cout << std::endl << "===============================" << std::endl << std::endl;
+    
 
-    int m_f[ordem][ordem][ordem];
+    // inicializa matriz de floyd
+    int *** m_f;
+    m_f = (int***) malloc(ordem * sizeof(int**));
+    for (int i=0; i<ordem; i++){
+        m_f[i] = (int**) malloc(ordem * sizeof(int*));
+        for(int j = 0; j<ordem; j++)
+            m_f[i][j] = (int*) malloc(ordem * sizeof(int));
+    }
 
+    // inicia o algoritimo de Floyd
     for(int i = 0; i<ordem; i++){
         for(int j = 0; j<ordem; j++){
             m_f[i][j][0] = m_adj[i][j]; 
@@ -451,15 +521,12 @@ void Grafo::getMatrixAdj(){
         }
     }
 
+    // sobrescreve a matriz de adjacencia com os custos mínimos para o retorno
     for(int i = 0; i<ordem; i++){
-        std::cout << "|";
         for(int j = 0; j<ordem; j++){
-            if( m_f[i][j][ordem-1] >= INT16_MAX)
-                std::cout << " n ";            
-            else
-                std::cout << " " << m_f[i][j][ordem-1] << " ";
+            m_adj[i][j] = m_f[i][j][ordem-1];
         }
-        std::cout << "|" << std::endl;
     }
-    
+
+    return m_adj;
 }

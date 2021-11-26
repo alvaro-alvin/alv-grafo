@@ -17,14 +17,14 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
   std::cout << "Vertices adicionada com sucesso!" << std::endl;
 
   std::cout << "Adicionando arestas..." << std::endl;
-
-  g.addAresta(1,2);
-  g.addAresta(1,3);
-  g.addAresta(2,4);
-  g.addAresta(1,5);
-  g.addAresta(3,6);
-  g.addAresta(2,6);
-  g.addAresta(7,8);
+  // vertice 1, vertice 2, custo
+  g.addAresta(1,2,5);
+  g.addAresta(1,3,3);
+  g.addAresta(2,4,2);
+  g.addAresta(1,5,4);
+  g.addAresta(3,6,7);
+  g.addAresta(2,6,4);
+  g.addAresta(7,8,2);
 
   std::cout << "Arestas adicionadas com sucesso" << std::endl << std::endl;
 
@@ -63,8 +63,23 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
 
   std::cout << std::endl;
 
+  std::cout << "Executando algorítimo de Floyd para encontar a matriz de custo mínimo:"<< std::endl;
 
-  g.getMatrixAdj();
+
+  int **matriz = g.Floyd();
+
+  std::cout << "Mtriz de custo mínimo:"<< std::endl;
+
+  for(int i = 0; i<((int) (sizeof(matriz))); i++){
+    std::cout << "|";
+        for(int j = 0; j<((int) (sizeof(matriz))); j++){
+          if( matriz[i][j] >= INT8_MAX)
+            std::cout << " n ";            
+          else
+            std::cout << " " << matriz[i][j] << " ";
+        }
+        std::cout << "|" << std::endl;
+    }
 
 
 

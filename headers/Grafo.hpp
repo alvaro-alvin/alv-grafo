@@ -66,8 +66,10 @@ class Grafo {
         // retorna a representacao do grafo em uma string
         std::string toSting();
 
-        // busca em profundidade - FUNCIONANDO SOMENTE PARA GRAFOS CONEXOS
+        // busca em profundidade 
         std::vector<std::list<std::pair<unsigned int, unsigned int>>> DFS();
+
+        void getMatrixAdj();
 };
 
 

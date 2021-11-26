@@ -220,7 +220,7 @@ Aresta* Grafo::getAresta(unsigned int id_v1, unsigned int id_v2){
             ++it;
         }
     }
-    std::cerr << "[ERRO] - Aresta solicitada não existe!" << std::endl;
+    std::cout << "Aresta solicitada nao existe, retornando nulo" << std::endl;
     return nullptr;
 }
 
@@ -385,4 +385,81 @@ void Grafo::DFS_VISIT(std::list<std::pair<unsigned int, unsigned int>> &v_r, uns
     v.status = 2;
     tempo++;
     v.fechado = tempo;
+}
+
+void Grafo::getMatrixAdj(){
+    //gerar matriz de adjacencia
+    std::list<Vertice*>::iterator it_i;
+    std::list<Vertice*>::iterator it_j;
+    it_i = vertice.begin();
+    int m_adj[ordem][ordem];
+    for(int i = 0; i<ordem; i++){
+        it_j = vertice.begin();
+        for(int j = 0; j<ordem; j++){
+            //std::cout << i + 1 << "-" << j + 1 << " ";
+            if(i == j){
+                m_adj[i][j] = 0;
+                //std::cout << "0" << std::endl;
+            }
+            else{
+                //std::cout << "confirmando:" << (*it_i)->id << "e" << (*it_j)->id << "  ";
+                Aresta* a = getAresta((*it_i)->id, (*it_j)->id);
+                
+                if(a == nullptr){
+                    m_adj[i][j] = INT16_MAX;
+                    //std::cout << "nulo" << std::endl;
+                }
+                else{
+                    m_adj[i][j] = a->custo;
+                    //std::cout << "custo" << std::endl;
+                }
+            }
+            it_j++;
+        }
+        it_i++;
+    }
+
+    for(int i = 0; i<ordem; i++){
+        std::cout << "|";
+        for(int j = 0; j<ordem; j++){
+            if( m_adj[i][j] == INT16_MAX)
+                std::cout << " n ";            
+            else
+                std::cout << " " << m_adj[i][j] << " ";
+        }
+        std::cout << "|" << std::endl;
+    }
+
+    std::cout << std::endl << "===============================" << std::endl << std::endl;
+
+    int m_f[ordem][ordem][ordem];
+
+    for(int i = 0; i<ordem; i++){
+        for(int j = 0; j<ordem; j++){
+            m_f[i][j][0] = m_adj[i][j]; 
+        }
+    }
+
+    for(int k = 1; k<ordem; k++){
+        for(int i = 0; i<ordem; i++){
+            for(int j = 0; j<ordem; j++){
+                if(m_f[i][j][k-1] <= (m_f[i][k][k-1] + m_f[k][j][k-1]))
+                    m_f[i][j][k] = m_f[i][j][k-1];    
+                else
+                    m_f[i][j][k] = m_f[i][k][k-1] + m_f[k][j][k-1];
+            }
+        }
+    }
+
+    for(int i = 0; i<ordem; i++){
+        std::cout << "|";
+        for(int j = 0; j<ordem; j++){
+            if( m_f[i][j][ordem-1] >= INT16_MAX)
+                std::cout << " n ";            
+            else
+                std::cout << " " << m_f[i][j][ordem-1] << " ";
+        }
+        std::cout << "|" << std::endl;
+    }
+    
 }

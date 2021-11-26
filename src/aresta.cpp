@@ -3,6 +3,13 @@
 Aresta::Aresta(unsigned int v1, unsigned int v2){
     vertice[0] = v1;
     vertice[1] = v2;
+    Aresta::custo = 1;
+}
+
+Aresta::Aresta(unsigned int v1, unsigned int v2, int custo){
+    vertice[0] = v1;
+    vertice[1] = v2;
+    Aresta::custo = custo;
 }
 
 std::string Aresta::toString(){

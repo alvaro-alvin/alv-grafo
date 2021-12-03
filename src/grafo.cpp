@@ -530,3 +530,53 @@ int** Grafo::Floyd(){
 
     return m_adj;
 }
+
+
+std::list<std::pair<unsigned int, unsigned int>> Grafo::BFS(int inicial){
+    std::list<std::pair<unsigned int, unsigned int>> v_r;
+    unsigned int tempo = 0;
+    // inicia o grafo.
+    std::list<Vertice*>::iterator it = vertice.begin();
+    // percorre a lista de vertices e as defini como brancas
+    while (it != vertice.end()){
+        (*it)->status = 0;
+        ++it;
+    }
+    // fila de vertices
+    std::queue<Vertice*> Q;
+    Vertice* v_inicial = getVertice(inicial);
+    Q.push(v_inicial);
+    Vertice* v;
+    v->aberto = tempo;
+    v->status = 1;
+    while (!Q.empty()){
+        std::cout << "nao esta vazio" << std::endl;
+
+        v = Q.back();
+
+        Q.pop();
+        std::list<Vertice*> adj_v = adj(v);
+        std::list<Vertice*>::iterator it = adj_v.begin();
+
+        while(it != adj_v.end()){
+            //TODO: NOT WORKING
+            if((*it)->status == 0){
+                //std::cout << "A" << std::endl;
+                tempo++;
+                std::pair<unsigned int, unsigned int> pai_filho;
+                Q.push((*it));
+                std::cout << "adicionado " << (*it)->id << " a fila" << std::endl;
+                (*it)->aberto = v->aberto + 1;
+                (*it)->status = 1;
+                pai_filho.first = v->id;
+                pai_filho.second = ((*it)->id);
+                v_r.push_back(pai_filho);
+            }
+            ++it;
+        }
+
+        v->status = 2;
+        v->fechado = tempo;
+    }
+    return v_r;
+}

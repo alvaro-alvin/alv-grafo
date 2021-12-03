@@ -30,7 +30,7 @@ $(builddir)/aresta.o: $(builddir)/vertice.o $(includedir)/Aresta.hpp $(srcdir)/a
 $(builddir)/vertice.o: $(includedir)/Vertice.hpp $(srcdir)/vertice.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/vertice.cpp -o $@
 
-$(builddir)/grafo.o: $(srcdir)/grafo.cpp $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Grafo.hpp $(includedir)/tree.hh $(includedir)/tree_util.hh
+$(builddir)/grafo.o: $(srcdir)/grafo.cpp $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Grafo.hpp
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/grafo.cpp -o $@
 
 # creating directories

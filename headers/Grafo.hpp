@@ -6,6 +6,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <queue>
 #include "Vertice.hpp"
 
 class Grafo {
@@ -67,6 +68,8 @@ class Grafo {
 
         // busca em profundidade 
         std::vector<std::list<std::pair<unsigned int, unsigned int>>> DFS();
+
+        std::list<std::pair<unsigned int, unsigned int>> BFS(int inicial);
 
         int** Floyd();
 };

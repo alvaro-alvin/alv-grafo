@@ -80,10 +80,19 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
         }
         std::cout << "|" << std::endl;
     }
+  
+  std::cout << "Vetor de roteamento da busca em largura:"<< std::endl;
 
+  std::list<std::pair<unsigned int, unsigned int>> v_r_BFS;
 
+  v_r_BFS = g.BFS(1);
 
-    
+  std::list<std::pair<unsigned int, unsigned int>>::iterator itt;
+  itt = v_r_BFS.begin();
+  for(itt=v_r_BFS.begin(); itt!=v_r_BFS.end(); ++itt){
+    std::cout << itt->first << " é pai de " << itt->second << std::endl;
+  }
+  std::cout << "=========================" << std::endl;
 
     return 0 ;
 }

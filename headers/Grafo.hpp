@@ -8,6 +8,7 @@
 #include <map>
 #include <queue>
 #include "Vertice.hpp"
+#include "Conjunto.hpp"
 
 class Grafo {
     private:
@@ -72,6 +73,8 @@ class Grafo {
         std::list<std::pair<unsigned int, unsigned int>> BFS(int inicial);
 
         int** Floyd();
+
+        std::list<std::pair<unsigned int, unsigned int>> kruskal();
 };
 
 

@@ -324,23 +324,23 @@ std::list<Aresta*> Grafo::arestas(){
         if (!(*it)->aresta.empty()){
             std::list<Aresta*>::iterator ita = (*it)->aresta.begin();
             //percorre as arestas de cada vertice
-            while (it != vertice.end()){
+            while (ita != (*it)->aresta.end()){
                 // se o id ainda não foi listado adiciona o id a lista de ids e a aresta a lista de arestas
-                if(!(std::find(ids.begin(), ids.end(), (*ita)->id) != ids.end())){
-                    ids.push_back((*ita)->id);
-                    lista_final.push_back(*ita);
-                }
-                ++ita;
+                    if(!(std::find(ids.begin(), ids.end(), (*ita)->id) != ids.end())){
+                        ids.push_back((*ita)->id);
+                        std::cout << (*ita)->vertice[0] << "--" << (*ita)->vertice[1] << "  custo: " << (*ita)->custo << std::endl; 
+                        lista_final.push_back(*ita);
+                    }
+                    ++ita;
             }
-            ++it;
+                
         }
-        else
-        {
             ++it;
-        }
     }
     return lista_final;
 }
+    
+
 
 std::list<Vertice*> Grafo::adj(Vertice* v){
     // instancia a lista dos vertices adjacentes
@@ -550,7 +550,7 @@ std::list<std::pair<unsigned int, unsigned int>> Grafo::BFS(int inicial){
     v->aberto = tempo;
     v->status = 1;
     while (!Q.empty()){
-        std::cout << "nao esta vazio" << std::endl;
+        //std::cout << "nao esta vazio" << std::endl;
 
         v = Q.back();
 
@@ -559,13 +559,12 @@ std::list<std::pair<unsigned int, unsigned int>> Grafo::BFS(int inicial){
         std::list<Vertice*>::iterator it = adj_v.begin();
 
         while(it != adj_v.end()){
-            //TODO: NOT WORKING
             if((*it)->status == 0){
                 //std::cout << "A" << std::endl;
                 tempo++;
                 std::pair<unsigned int, unsigned int> pai_filho;
                 Q.push((*it));
-                std::cout << "adicionado " << (*it)->id << " a fila" << std::endl;
+                //std::cout << "adicionado " << (*it)->id << " a fila" << std::endl;
                 (*it)->aberto = v->aberto + 1;
                 (*it)->status = 1;
                 pai_filho.first = v->id;
@@ -580,3 +579,63 @@ std::list<std::pair<unsigned int, unsigned int>> Grafo::BFS(int inicial){
     }
     return v_r;
 }
+
+std::list<std::pair<unsigned int, unsigned int>> Grafo::kruskal(){
+    //vetor de rotacao
+    std::list<std::pair<unsigned int, unsigned int>> v_r;
+
+    std::list<Vertice*>::iterator it = vertice.begin();
+    // floresta
+    Conjunto<int> c(ordem);
+    //fila de arestas ordenadas 
+    std::queue<Aresta*> q;
+    // lista de arestas
+    std::list<Aresta*> a = arestas();
+    // percorre a lista de vertices e cria os conjuntos
+    while (it != vertice.end()){
+        c.novoSet((*it)->id);
+        ++it;
+    }
+    // percorrea a lista de arestas para ordenalas de forma crescente na fila
+    std::list<Aresta*>::iterator it_a;
+    int aux = a.size();
+    for(int i = 0; i<aux; i++){
+        it_a = a.begin();
+        int menor_custo = INT32_MAX;
+        Aresta* menor_aresta;
+        while (it_a != a.end()){
+            if((*it_a)->custo < menor_custo){
+                menor_aresta = (*it_a);
+                menor_custo = (*it_a)->custo;
+            }
+            ++it_a;
+        }
+        q.push(menor_aresta);
+        a.remove(menor_aresta);
+        std::cout << menor_aresta->vertice[0] << " - " << menor_aresta->vertice[1] << "  custo:" << menor_aresta->custo<< std::endl;
+    }
+
+    Aresta* aresta;
+    while (!q.empty())
+    {
+        aresta = q.front();
+        q.pop();
+        //int aa = c.encontra(aresta->vertice[0]);
+        //int bb = c.encontra(aresta->vertice[1]);
+
+        if(c.encontra(aresta->vertice[0]) != c.encontra(aresta->vertice[1])){
+            //TODO:Arvore  = Arvore U (vertice[0], vertice[1]);
+            std::cout << "A" << std::endl;
+            v_r.push_back(std::pair<unsigned int, unsigned int>(aresta->vertice[0], aresta->vertice[1]));
+            c.unir(aresta->vertice[0], aresta->vertice[1]);
+        }
+    }
+    return v_r;
+}
+
+
+
+
+
+
+//v_r.push_back(std::pair<unsigned int, unsigned int>(aresta->vertice[0], aresta->vertice[1]));

@@ -24,7 +24,7 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
   g.addAresta(1,5,4);
   g.addAresta(3,6,7);
   g.addAresta(2,6,4);
-  g.addAresta(7,8,2);
+  //g.addAresta(7,8,2);
 
   std::cout << "Arestas adicionadas com sucesso" << std::endl << std::endl;
 
@@ -35,6 +35,17 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
   std::cout << "Grafo: "<< std::endl;
 
   std::cout << g.toSting() << std::endl;
+
+  std::list<Aresta*> a = g.arestas();
+  std::list<Aresta*>::iterator it_a = a.begin();
+
+    std::cout << "Lista de arestas: "<< std::endl;
+  for(it_a = a.begin(); it_a!=a.end(); ++it_a){
+      std::cout << (*it_a)->id << " " << std::endl;
+  }
+
+  
+  
 
   std::cout << "Aresta que conecta vertices 1 e 3: " << g.getAresta(1,3)->id << std::endl;
 
@@ -93,6 +104,17 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
     std::cout << itt->first << " é pai de " << itt->second << std::endl;
   }
   std::cout << "=========================" << std::endl;
+
+
+
+  std::cout << "Vetor de roteamento (arvore) da Kuskal:"<< std::endl;
+std::list<std::pair<unsigned int, unsigned int>> v_r_Kruskal;
+v_r_Kruskal = g.kruskal();
+itt = v_r_Kruskal.begin();
+for(itt=v_r_Kruskal.begin(); itt!=v_r_Kruskal.end(); ++itt){
+  std::cout << itt->first << " é pai de " << itt->second << std::endl;
+}
+std::cout << "=========================" << std::endl;
 
     return 0 ;
 }

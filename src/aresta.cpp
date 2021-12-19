@@ -14,6 +14,6 @@ Aresta::Aresta(unsigned int v1, unsigned int v2, int custo){
 
 std::string Aresta::toString(){
     std::ostringstream resultado;
-    resultado << "[" << "(" << vertice[0] << ", " << vertice[1] << ") " << "id: " << id << "] " ;
+    resultado << "[" << "(" << vertice[0] << " - " << vertice[1] << "), " << "id: " << id << ", custo: " << custo << "] " ;
     return resultado.str();
 }

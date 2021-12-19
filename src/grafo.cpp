@@ -20,6 +20,24 @@ bool Grafo::addVertice(){ // -------------------------------------- OK
     return true;
 }
 
+bool Grafo::addVertice(int id){ // -------------------------------------- OK
+    for(auto it= vertice.begin(); it!=vertice.end(); it++){
+        if((*it)->id == id){
+            std::cout << "id ja existente impissível adicionar vertice";
+            return false;
+        }
+    }
+    //estancia nova vertice com id recebido
+    Vertice * v = new Vertice(id);
+    if(v == nullptr){
+        std::cerr << "Erro ao alocar vertice!" << std::endl;
+        return false;
+    }
+    vertice.push_back(v);
+    ordem++;
+    return true;
+}
+
 bool Grafo::addAresta(unsigned int v1, unsigned int v2){ //--------------------- OK
     // valida a existencia dos vertices requeridos pela nova aresta 
     bool existe_v1 = false;
@@ -324,23 +342,23 @@ std::list<Aresta*> Grafo::arestas(){
         if (!(*it)->aresta.empty()){
             std::list<Aresta*>::iterator ita = (*it)->aresta.begin();
             //percorre as arestas de cada vertice
-            while (it != vertice.end()){
+            while (ita != (*it)->aresta.end()){
                 // se o id ainda não foi listado adiciona o id a lista de ids e a aresta a lista de arestas
-                if(!(std::find(ids.begin(), ids.end(), (*ita)->id) != ids.end())){
-                    ids.push_back((*ita)->id);
-                    lista_final.push_back(*ita);
-                }
-                ++ita;
+                    if(!(std::find(ids.begin(), ids.end(), (*ita)->id) != ids.end())){
+                        ids.push_back((*ita)->id);
+                        //std::cout << (*ita)->vertice[0] << "--" << (*ita)->vertice[1] << "  custo: " << (*ita)->custo << std::endl; 
+                        lista_final.push_back(*ita);
+                    }
+                    ++ita;
             }
-            ++it;
+                
         }
-        else
-        {
             ++it;
-        }
     }
     return lista_final;
 }
+    
+
 
 std::list<Vertice*> Grafo::adj(Vertice* v){
     // instancia a lista dos vertices adjacentes
@@ -529,4 +547,94 @@ int** Grafo::Floyd(){
     }
 
     return m_adj;
+}
+
+
+std::list<std::pair<unsigned int, unsigned int>> Grafo::BFS(int inicial){
+    std::list<std::pair<unsigned int, unsigned int>> v_r;
+    unsigned int tempo = 0;
+    // inicia o grafo.
+    std::list<Vertice*>::iterator it = vertice.begin();
+    // percorre a lista de vertices e as defini como brancas
+    while (it != vertice.end()){
+        (*it)->status = 0;
+        ++it;
+    }
+    // fila de vertices
+    std::queue<Vertice*> Q;
+    Vertice* v_inicial = getVertice(inicial);
+    Q.push(v_inicial);
+    Vertice* v;
+    v->aberto = tempo;
+    v->status = 1;
+    while (!Q.empty()){
+        //std::cout << "nao esta vazio" << std::endl;
+
+        v = Q.back();
+
+        Q.pop();
+        std::list<Vertice*> adj_v = adj(v);
+        std::list<Vertice*>::iterator it = adj_v.begin();
+
+        while(it != adj_v.end()){
+            if((*it)->status == 0){
+                //std::cout << "A" << std::endl;
+                tempo++;
+                std::pair<unsigned int, unsigned int> pai_filho;
+                Q.push((*it));
+                //std::cout << "adicionado " << (*it)->id << " a fila" << std::endl;
+                (*it)->aberto = v->aberto + 1;
+                (*it)->status = 1;
+                pai_filho.first = v->id;
+                pai_filho.second = ((*it)->id);
+                v_r.push_back(pai_filho);
+            }
+            ++it;
+        }
+
+        v->status = 2;
+        v->fechado = tempo;
+    }
+    return v_r;
+}
+
+bool Grafo::compareArestasCost(const Aresta* a1, const Aresta* a2){
+    if(a1->custo< a2->custo)
+        return true;
+    else
+        return false;
+}
+
+Grafo Grafo::kruskal(){
+    //vetor de rotacao
+    Grafo g;
+
+    std::list<Vertice*>::iterator it = vertice.begin();
+    // floresta
+    Conjunto<int> c(ordem);
+    //fila de arestas ordenadas 
+    std::queue<Aresta*> q;
+    // lista de arestas
+    std::list<Aresta*> a = arestas();
+    // percorre a lista de vertices e cria os conjuntos e o novo grafo
+    while (it != vertice.end()){
+        c.novoSet((*it)->id);
+        g.addVertice((*it)->id);
+        ++it;
+
+    }
+    //ordena de forma crescente (não decrescente) a lista de arestas
+    a.sort(compareArestasCost);
+    
+    Aresta* aresta;
+    while (!a.empty())
+    {
+        aresta = (*a.begin());
+        a.pop_front();
+        if(c.encontra(aresta->vertice[0]) != c.encontra(aresta->vertice[1])){
+            g.addAresta(aresta->vertice[0], aresta->vertice[1], aresta->custo);
+            c.unir(aresta->vertice[0], aresta->vertice[1]);
+        }
+    }
+    return g;
 }

@@ -6,7 +6,9 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <queue>
 #include "Vertice.hpp"
+#include "Conjunto.hpp"
 
 class Grafo {
     private:
@@ -16,6 +18,8 @@ class Grafo {
 
         //called in DFS
         void DFS_VISIT(std::list<std::pair<unsigned int, unsigned int>> &v_r, unsigned int &tempo, Vertice &v);
+
+        static bool compareArestasCost(const Aresta* a1, const Aresta* a2);
 
     public:
         unsigned int id;
@@ -29,6 +33,7 @@ class Grafo {
 
         // adiciona um vertice com id gerado pelo grafo
         bool addVertice();
+        bool addVertice(int id);
         // adiciona aresta que conecta dois vertices
         bool addAresta(unsigned int v1, unsigned int v2);
         bool addAresta(unsigned int v1, unsigned int v2, int custo);
@@ -68,7 +73,11 @@ class Grafo {
         // busca em profundidade 
         std::vector<std::list<std::pair<unsigned int, unsigned int>>> DFS();
 
+        std::list<std::pair<unsigned int, unsigned int>> BFS(int inicial);
+
         int** Floyd();
+
+        Grafo kruskal();
 };
 
 

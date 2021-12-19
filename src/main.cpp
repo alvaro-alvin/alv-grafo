@@ -24,7 +24,7 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
   g.addAresta(1,5,4);
   g.addAresta(3,6,7);
   g.addAresta(2,6,4);
-  g.addAresta(7,8,2);
+  //g.addAresta(7,8,2);
 
   std::cout << "Arestas adicionadas com sucesso" << std::endl << std::endl;
 
@@ -35,6 +35,17 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
   std::cout << "Grafo: "<< std::endl;
 
   std::cout << g.toSting() << std::endl;
+
+  std::list<Aresta*> a = g.arestas();
+  std::list<Aresta*>::iterator it_a = a.begin();
+
+    std::cout << "Lista de arestas: "<< std::endl;
+  for(it_a = a.begin(); it_a!=a.end(); ++it_a){
+      std::cout << (*it_a)->id << " " << std::endl;
+  }
+
+  
+  
 
   std::cout << "Aresta que conecta vertices 1 e 3: " << g.getAresta(1,3)->id << std::endl;
 
@@ -80,10 +91,30 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
         }
         std::cout << "|" << std::endl;
     }
+  
+  std::cout << "Vetor de roteamento da busca em largura:"<< std::endl;
+
+  std::list<std::pair<unsigned int, unsigned int>> v_r_BFS;
+
+  v_r_BFS = g.BFS(1);
+
+  std::list<std::pair<unsigned int, unsigned int>>::iterator itt;
+  itt = v_r_BFS.begin();
+  for(itt=v_r_BFS.begin(); itt!=v_r_BFS.end(); ++itt){
+    std::cout << itt->first << " é pai de " << itt->second << std::endl;
+  }
+  std::cout << "=========================" << std::endl;
 
 
 
-    
+  std::cout << "Arestas do grafo(arvore) mínimo - Kruskal:"<< std::endl;
+Grafo g_kruskal;
+g_kruskal = g.kruskal();
+std::cout << "somente arestas:" << std::endl;
+std::list<Aresta*> aa = g_kruskal.arestas();
+for(auto it = aa.begin(); it!=aa.end(); it++){
+  std::cout << (*it)->toString() << std::endl;
+}
 
     return 0 ;
 }

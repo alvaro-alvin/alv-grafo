@@ -14,23 +14,26 @@ LIBS =
 
 
 
-OBJS = $(builddir)/aresta.o $(builddir)/vertice.o $(builddir)/grafo.o   
+OBJS = $(builddir)/aresta.o $(builddir)/vertice.o $(builddir)/grafo.o #$(builddir)/conjunto.o
 
 .PHONY: doc clean all test 
 
 all: main
 
-main: $(OBJS) $(srcdir)/main.cpp $(builddir)/grafo.o
+main: $(OBJS) $(srcdir)/main.cpp $(builddir)/grafo.o 
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) $(srcdir)/main.cpp $(LIBS) -o $(bindir)/grafo_teste
 
 
 $(builddir)/aresta.o: $(builddir)/vertice.o $(includedir)/Aresta.hpp $(srcdir)/aresta.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/aresta.cpp -o $@
 
+#$(builddir)/conjunto.o: $(includedir)/Conjunto.hpp 
+#	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(includedir)/Conjunto.hpp -o $@
+
 $(builddir)/vertice.o: $(includedir)/Vertice.hpp $(srcdir)/vertice.cpp 
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/vertice.cpp -o $@
 
-$(builddir)/grafo.o: $(srcdir)/grafo.cpp $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Grafo.hpp
+$(builddir)/grafo.o: $(builddir)/vertice.o $(builddir)/aresta.o $(includedir)/Conjunto.hpp $(includedir)/Grafo.hpp $(srcdir)/grafo.cpp
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) $(srcdir)/grafo.cpp -o $@
 
 # creating directories

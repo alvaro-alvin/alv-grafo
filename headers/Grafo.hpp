@@ -19,6 +19,8 @@ class Grafo {
         //called in DFS
         void DFS_VISIT(std::list<std::pair<unsigned int, unsigned int>> &v_r, unsigned int &tempo, Vertice &v);
 
+        static bool compareArestasCost(const Aresta* a1, const Aresta* a2);
+
     public:
         unsigned int id;
         
@@ -31,6 +33,7 @@ class Grafo {
 
         // adiciona um vertice com id gerado pelo grafo
         bool addVertice();
+        bool addVertice(int id);
         // adiciona aresta que conecta dois vertices
         bool addAresta(unsigned int v1, unsigned int v2);
         bool addAresta(unsigned int v1, unsigned int v2, int custo);
@@ -74,7 +77,7 @@ class Grafo {
 
         int** Floyd();
 
-        std::list<std::pair<unsigned int, unsigned int>> kruskal();
+        Grafo kruskal();
 };
 
 

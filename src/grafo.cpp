@@ -20,6 +20,24 @@ bool Grafo::addVertice(){ // -------------------------------------- OK
     return true;
 }
 
+bool Grafo::addVertice(int id){ // -------------------------------------- OK
+    for(auto it= vertice.begin(); it!=vertice.end(); it++){
+        if((*it)->id == id){
+            std::cout << "id ja existente impissível adicionar vertice";
+            return false;
+        }
+    }
+    //estancia nova vertice com id recebido
+    Vertice * v = new Vertice(id);
+    if(v == nullptr){
+        std::cerr << "Erro ao alocar vertice!" << std::endl;
+        return false;
+    }
+    vertice.push_back(v);
+    ordem++;
+    return true;
+}
+
 bool Grafo::addAresta(unsigned int v1, unsigned int v2){ //--------------------- OK
     // valida a existencia dos vertices requeridos pela nova aresta 
     bool existe_v1 = false;
@@ -328,7 +346,7 @@ std::list<Aresta*> Grafo::arestas(){
                 // se o id ainda não foi listado adiciona o id a lista de ids e a aresta a lista de arestas
                     if(!(std::find(ids.begin(), ids.end(), (*ita)->id) != ids.end())){
                         ids.push_back((*ita)->id);
-                        std::cout << (*ita)->vertice[0] << "--" << (*ita)->vertice[1] << "  custo: " << (*ita)->custo << std::endl; 
+                        //std::cout << (*ita)->vertice[0] << "--" << (*ita)->vertice[1] << "  custo: " << (*ita)->custo << std::endl; 
                         lista_final.push_back(*ita);
                     }
                     ++ita;
@@ -580,9 +598,16 @@ std::list<std::pair<unsigned int, unsigned int>> Grafo::BFS(int inicial){
     return v_r;
 }
 
-std::list<std::pair<unsigned int, unsigned int>> Grafo::kruskal(){
+bool Grafo::compareArestasCost(const Aresta* a1, const Aresta* a2){
+    if(a1->custo< a2->custo)
+        return true;
+    else
+        return false;
+}
+
+Grafo Grafo::kruskal(){
     //vetor de rotacao
-    std::list<std::pair<unsigned int, unsigned int>> v_r;
+    Grafo g;
 
     std::list<Vertice*>::iterator it = vertice.begin();
     // floresta
@@ -591,51 +616,25 @@ std::list<std::pair<unsigned int, unsigned int>> Grafo::kruskal(){
     std::queue<Aresta*> q;
     // lista de arestas
     std::list<Aresta*> a = arestas();
-    // percorre a lista de vertices e cria os conjuntos
+    // percorre a lista de vertices e cria os conjuntos e o novo grafo
     while (it != vertice.end()){
         c.novoSet((*it)->id);
+        g.addVertice((*it)->id);
         ++it;
-    }
-    // percorrea a lista de arestas para ordenalas de forma crescente na fila
-    std::list<Aresta*>::iterator it_a;
-    int aux = a.size();
-    for(int i = 0; i<aux; i++){
-        it_a = a.begin();
-        int menor_custo = INT32_MAX;
-        Aresta* menor_aresta;
-        while (it_a != a.end()){
-            if((*it_a)->custo < menor_custo){
-                menor_aresta = (*it_a);
-                menor_custo = (*it_a)->custo;
-            }
-            ++it_a;
-        }
-        q.push(menor_aresta);
-        a.remove(menor_aresta);
-        std::cout << menor_aresta->vertice[0] << " - " << menor_aresta->vertice[1] << "  custo:" << menor_aresta->custo<< std::endl;
-    }
 
+    }
+    //ordena de forma crescente (não decrescente) a lista de arestas
+    a.sort(compareArestasCost);
+    
     Aresta* aresta;
-    while (!q.empty())
+    while (!a.empty())
     {
-        aresta = q.front();
-        q.pop();
-        //int aa = c.encontra(aresta->vertice[0]);
-        //int bb = c.encontra(aresta->vertice[1]);
-
+        aresta = (*a.begin());
+        a.pop_front();
         if(c.encontra(aresta->vertice[0]) != c.encontra(aresta->vertice[1])){
-            //TODO:Arvore  = Arvore U (vertice[0], vertice[1]);
-            std::cout << "A" << std::endl;
-            v_r.push_back(std::pair<unsigned int, unsigned int>(aresta->vertice[0], aresta->vertice[1]));
+            g.addAresta(aresta->vertice[0], aresta->vertice[1], aresta->custo);
             c.unir(aresta->vertice[0], aresta->vertice[1]);
         }
     }
-    return v_r;
+    return g;
 }
-
-
-
-
-
-
-//v_r.push_back(std::pair<unsigned int, unsigned int>(aresta->vertice[0], aresta->vertice[1]));

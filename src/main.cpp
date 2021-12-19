@@ -107,14 +107,14 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
 
 
 
-  std::cout << "Vetor de roteamento (arvore) da Kuskal:"<< std::endl;
-std::list<std::pair<unsigned int, unsigned int>> v_r_Kruskal;
-v_r_Kruskal = g.kruskal();
-itt = v_r_Kruskal.begin();
-for(itt=v_r_Kruskal.begin(); itt!=v_r_Kruskal.end(); ++itt){
-  std::cout << itt->first << " é pai de " << itt->second << std::endl;
+  std::cout << "Arestas do grafo(arvore) mínimo - Kuskal:"<< std::endl;
+Grafo g_kruskal;
+g_kruskal = g.kruskal();
+std::cout << "somente arestas:" << std::endl;
+std::list<Aresta*> aa = g_kruskal.arestas();
+for(auto it = aa.begin(); it!=aa.end(); it++){
+  std::cout << (*it)->toString() << std::endl;
 }
-std::cout << "=========================" << std::endl;
 
     return 0 ;
 }

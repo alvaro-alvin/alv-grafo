@@ -107,7 +107,7 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
 
 
 
-  std::cout << "Arestas do grafo(arvore) mínimo - Kuskal:"<< std::endl;
+  std::cout << "Arestas do grafo(arvore) mínimo - Kruskal:"<< std::endl;
 Grafo g_kruskal;
 g_kruskal = g.kruskal();
 std::cout << "somente arestas:" << std::endl;

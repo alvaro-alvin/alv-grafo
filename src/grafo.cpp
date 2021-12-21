@@ -649,8 +649,6 @@ Grafo Grafo::kruskal(){
 Grafo Grafo::prim(int id_vertice_inicial){
     //grafo que sera retornado
     Grafo g;
-    //conjunto 
-    Conjunto<int> c(ordem);
     // lista de vetices
     std::list<Vertice*> v = vertices();
     //inicia todos os vertices com custo infinito
@@ -658,7 +656,6 @@ Grafo Grafo::prim(int id_vertice_inicial){
     //adiciona os vertices ao grafo que sera retornado 
     std::list<Vertice*>::iterator it = vertice.begin();
     while (it != vertice.end()){
-        c.novoSet((*it)->id);
         (*it)->custo = INT16_MAX;
         g.addVertice((*it)->id);
         ++it;

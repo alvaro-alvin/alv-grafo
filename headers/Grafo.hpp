@@ -20,6 +20,7 @@ class Grafo {
         void DFS_VISIT(std::list<std::pair<unsigned int, unsigned int>> &v_r, unsigned int &tempo, Vertice &v);
 
         static bool compareArestasCost(const Aresta* a1, const Aresta* a2);
+        static bool compareVerticesCost(const Vertice* v1, const Vertice* v2);
 
     public:
         unsigned int id;
@@ -78,6 +79,8 @@ class Grafo {
         int** Floyd();
 
         Grafo kruskal();
+
+        Grafo prim(int id_vertice_inicial);
 };
 
 

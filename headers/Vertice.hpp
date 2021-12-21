@@ -22,6 +22,10 @@ class Vertice {
         int aberto;
         // tempo em que foi fechado
         int fechado;
+        // custo para chegar até ele
+        int custo;
+        // custo para chegar até ele
+        int pai;
 
         Vertice(unsigned int id);
 

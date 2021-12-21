@@ -605,6 +605,13 @@ bool Grafo::compareArestasCost(const Aresta* a1, const Aresta* a2){
         return false;
 }
 
+bool Grafo::compareVerticesCost(const Vertice* v1, const Vertice* v2){
+    if(v1->custo< v2->custo)
+        return true;
+    else
+        return false;
+}
+
 Grafo Grafo::kruskal(){
     //vetor de rotacao
     Grafo g;
@@ -635,6 +642,55 @@ Grafo Grafo::kruskal(){
             g.addAresta(aresta->vertice[0], aresta->vertice[1], aresta->custo);
             c.unir(aresta->vertice[0], aresta->vertice[1]);
         }
+    }
+    return g;
+}
+
+Grafo Grafo::prim(int id_vertice_inicial){
+    //grafo que sera retornado
+    Grafo g;
+    //conjunto 
+    Conjunto<int> c(ordem);
+    // lista de vetices
+    std::list<Vertice*> v = vertices();
+    //inicia todos os vertices com custo infinito
+    //inicia o conjunto
+    //adiciona os vertices ao grafo que sera retornado 
+    std::list<Vertice*>::iterator it = vertice.begin();
+    while (it != vertice.end()){
+        c.novoSet((*it)->id);
+        (*it)->custo = INT16_MAX;
+        g.addVertice((*it)->id);
+        ++it;
+    }
+    // vetice inicial tem custo 0
+    getVertice(id_vertice_inicial)->custo = 0;
+    // ordena o s vertices com base em seus custos
+    Vertice* vertice_ptr;
+    while (!v.empty())
+    {   
+        //ordena os verices em ordem crescente (não decrescente) com base em seus custos
+        v.sort(compareVerticesCost);
+        // retira o vertice de menor custo
+        vertice_ptr = (*v.begin());
+        v.pop_front();
+        //percorre a lista de vertices adjacentes ao vertice com menor custo 
+        std::list<Vertice*> vs = adj(vertice_ptr);
+        for(auto it = vs.begin(); it!= vs.end(); it++){
+            // se o vertice ajdacente ainda nao foi visitado e o custo da aresta que chega nele é menor que o seu custo atual:
+            Aresta* aresta = getAresta(vertice_ptr->id, (*it)->id);
+            if((std::find(v.begin(), v.end(), (*it)) != v.end()) && aresta->custo < (*it)->custo){
+                //define o vertice de menor custo como pai do vertice encontrado
+                (*it)->pai = vertice_ptr->id;
+                //o vertiuce encontrado recebe o custo da aresta usada para encontralo
+                (*it)->custo = aresta->custo;                
+            }
+        }
+    }
+    v = vertices();
+    for(auto it = v.begin(); it != v.end(); it++){
+        //percorre os vertices novamente e adiciona ao grafo que sera retornado as arestas referentes as ligações de pai de cada vertice
+        g.addAresta((*it)->id, (*it)->pai, (*it)->custo);
     }
     return g;
 }

@@ -13,19 +13,28 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
   g.addVertice();
   g.addVertice();
   g.addVertice();
+  g.addVertice();
 
   std::cout << "Vertices adicionada com sucesso!" << std::endl;
 
   std::cout << "Adicionando arestas..." << std::endl;
-  // vertice 1, vertice 2, custo
-  g.addAresta(1,2,5);
-  g.addAresta(1,3,3);
-  g.addAresta(2,4,2);
-  g.addAresta(1,5,4);
-  g.addAresta(3,6,7);
-  g.addAresta(2,6,4);
-  //g.addAresta(7,8,2);
 
+
+  // vertice 1, vertice 2, custo
+  g.addAresta(1,2,4);
+  g.addAresta(2,3,8);
+  g.addAresta(3,4,7);
+  g.addAresta(4,5,9);
+  g.addAresta(5,6,10);
+  g.addAresta(6,7,2);
+  g.addAresta(7,8,1);
+  g.addAresta(8,9,7);
+  g.addAresta(8,1,8);
+  g.addAresta(8,2,11);
+  g.addAresta(9,3,2);
+  g.addAresta(7,9,6);
+  g.addAresta(6,3,4);
+  g.addAresta(6,4,14);
   std::cout << "Arestas adicionadas com sucesso" << std::endl << std::endl;
 
   std::cout << "Ordem do grafo: " << g.getOrdem() << std::endl;
@@ -47,11 +56,13 @@ int main( int argc, char *argv[ ], char *envp[ ] ){
   
   
 
-  std::cout << "Aresta que conecta vertices 1 e 3: " << g.getAresta(1,3)->id << std::endl;
+  std::cout << "Aresta que conecta vertices 1 e 3: " << g.getAresta(1,2)->id << std::endl;
 
+
+  /*
   std::cout << "Aresta oposta ao vertice 1 pela aresta 2: " << 
     g.oposto(g.getVertice(1), g.getAresta(2))->id << std::endl;
-
+  */
   std::cout << "Grau do vertice 1: " << g.grau(g.getVertice(1)) << std::endl;
 
   std::cout << "Executando busca em profundiade:" << std::endl;
@@ -112,6 +123,15 @@ Grafo g_kruskal;
 g_kruskal = g.kruskal();
 std::cout << "somente arestas:" << std::endl;
 std::list<Aresta*> aa = g_kruskal.arestas();
+for(auto it = aa.begin(); it!=aa.end(); it++){
+  std::cout << (*it)->toString() << std::endl;
+}
+
+  std::cout << "Arestas do grafo(arvore) mínimo - Prim:"<< std::endl;
+Grafo g_prim;
+g_prim = g.prim(1);
+std::cout << "somente arestas:" << std::endl;
+aa = g_prim.arestas();
 for(auto it = aa.begin(); it!=aa.end(); it++){
   std::cout << (*it)->toString() << std::endl;
 }
